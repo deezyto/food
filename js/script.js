@@ -294,40 +294,37 @@ function postData(form) {
     //ставимо картинку завантаження після форми
     form.insertAdjacentElement('afterend', statusMassage);
 
-    const request = new XMLHttpRequest();
-
-    request.open('POST', 'server.php');
-
-    request.setRequestHeader('Content-type', 'application/json');
+    //request.setRequestHeader('Content-type', 'application/json');
     //формат відправки даних formData
     const formData = new FormData(form);
-
+    
     //робимо з формата formData формат обєкта
     const object = {};
 
     formData.forEach((value, key) => {
       object[key] = value;
     });
-
-    //конвертуєм готовий обєкт в JSON
-    const json = JSON.stringify(object);
-
-    request.send(json);
-
-    request.addEventListener('load', () => {
-      if (request.status === 200) {
-        console.log('OK');
-        showThanksModal(message.success);
-        //очищаєм форму після відправки
-        form.reset();
-
-        //видаляєм повідомлення про відправку даних
-        statusMassage.remove();
-
-      } else {
-        showThanksModal(message.failure);
-      }
+    
+    fetch('server.php', {
+      method: "POST",
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(object)
+    })
+    .then(data => data.text())
+    .then(data => {
+      console.log(data);
+      showThanksModal(message.success);
+      //видаляєм повідомлення про відправку даних
+      statusMassage.remove();
+    }).catch(() => {
+      showThanksModal(message.failure);
+    }).finally(() => {
+      //очищаєм форму після відправки
+      form.reset();
     });
+
   });
 }
 
@@ -358,4 +355,5 @@ function showThanksModal(message) {
   }, 5000);
 
 }
+
 });
