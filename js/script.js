@@ -115,7 +115,9 @@ setClock('.timer', endtime);
 //показуєм модальне вікно при натисканні на кнопку
 
 const openModalWindow = document.querySelectorAll('[data-modal]');
+/* закоментуєм щоб зробити делегування подій
 const closeModalWindow = document.querySelector('[data-modal-close]');
+*/
 const modalWindow = document.querySelector('.modal');
 
 openModalWindow.forEach(item => {
@@ -148,12 +150,17 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
+/* закоментуєм щоб зробити делегування подій
 closeModalWindow.addEventListener('click', closeModal);
+*/
 
 //закриваєм модальне вікно якщо клікнули
 //поза областею модального вікна
 modalWindow.addEventListener('click', (e) => {
-  if (e.target === modalWindow) {
+  //добавляєм e.target.getAttribute('data-modal-close') === ''
+  //щоб закривалось модальне вікно навіть якщо воно має інший клас
+  //але той самий data атрибут
+  if (e.target === modalWindow || e.target.getAttribute('data-modal-close') === '') {
     closeModal();
   }
 });
@@ -168,7 +175,7 @@ document.addEventListener('keydown', (e) => {
 
 //зробити щоб показувалось модальне вікно
 //через деякий час
-const modalTimerId = setTimeout(openModal, 20000);
+const modalTimerId = setTimeout(openModal, 50000);
 
 //зробити щоб показувалось модальне вікно
 //після того як користувач дойшов до footer
@@ -259,7 +266,7 @@ const forms = document.querySelectorAll('form');
 console.log(forms, 'forms');
 
 const message = {
-  loading: 'Загрузка',
+  loading: 'img/form/spinner.svg',
   success: 'Дякую, скоро ми Вам зателефонуєм!',
   failure: 'Щось пішло не так...'
 };
@@ -274,10 +281,18 @@ function postData(form) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const statusMassage = document.createElement('div');
-    statusMassage.classList.add('status');
-    statusMassage.textContent = message.loading;
-    form.append(statusMassage);
+    const statusMassage = document.createElement('img');
+    
+    statusMassage.src = message.loading;
+    //statusMassage.textContent = message.loading;
+    statusMassage.style.cssText =`
+      display: block;
+      margin: 0 auto;
+    `;
+
+    //form.append(statusMassage);
+    //ставимо картинку завантаження після форми
+    form.insertAdjacentElement('afterend', statusMassage);
 
     const request = new XMLHttpRequest();
 
@@ -302,20 +317,45 @@ function postData(form) {
     request.addEventListener('load', () => {
       if (request.status === 200) {
         console.log('OK');
-        statusMassage.textContent = message.success;
+        showThanksModal(message.success);
         //очищаєм форму після відправки
         form.reset();
 
         //видаляєм повідомлення про відправку даних
-        setTimeout(() => {
-          statusMassage.remove();
-        }, 2000);
+        statusMassage.remove();
 
       } else {
-        statusMassage.textContent = message.failure;
+        showThanksModal(message.failure);
       }
     });
   });
 }
 
+//робимо красиве оповіщення користувача
+function showThanksModal(message) {
+  //отримуєм блок модального вікна
+  const prevModalDialog = document.querySelector('.modal__dialog');
+  console.log(prevModalDialog);
+  //закриваєм блок модального вікна
+  prevModalDialog.classList.add('hide');
+  openModal();
+  const thanksModal = document.createElement('div');
+  thanksModal.classList.add('modal__dialog');
+  thanksModal.innerHTML = `
+  <div class="modal__content">
+  <div class="modal__close" data-modal-close>x</div>
+  <div class="modal__title">${message}</div>
+  </div>
+  `;
+
+  document.querySelector('.modal').append(thanksModal);
+
+  setTimeout(() => {
+    thanksModal.remove();
+    prevModalDialog.classList.add('show');
+    prevModalDialog.classList.remove('hide');
+    closeModal();
+  }, 5000);
+
+}
 });
