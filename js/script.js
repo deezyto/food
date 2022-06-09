@@ -253,4 +253,69 @@ new MenuCards(
   'menu__item'
 ).render();
 
+//створюєм функцію відправки даних на сервер
+//за допомогою JSON
+const forms = document.querySelectorAll('form');
+console.log(forms, 'forms');
+
+const message = {
+  loading: 'Загрузка',
+  success: 'Дякую, скоро ми Вам зателефонуєм!',
+  failure: 'Щось пішло не так...'
+};
+
+//перебираєм всі форми на сайті
+//щоб приймати дані зі всіх форм
+forms.forEach(item => {
+  postData(item);
+});
+
+function postData(form) {
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const statusMassage = document.createElement('div');
+    statusMassage.classList.add('status');
+    statusMassage.textContent = message.loading;
+    form.append(statusMassage);
+
+    const request = new XMLHttpRequest();
+
+    request.open('POST', 'server.php');
+
+    request.setRequestHeader('Content-type', 'application/json');
+    //формат відправки даних formData
+    const formData = new FormData(form);
+
+    //робимо з формата formData формат обєкта
+    const object = {};
+
+    formData.forEach((value, key) => {
+      object[key] = value;
+    });
+
+    //конвертуєм готовий обєкт в JSON
+    const json = JSON.stringify(object);
+
+    request.send(json);
+
+    request.addEventListener('load', () => {
+      if (request.status === 200) {
+        console.log('OK');
+        statusMassage.textContent = message.success;
+        //очищаєм форму після відправки
+        form.reset();
+
+        //видаляєм повідомлення про відправку даних
+        setTimeout(() => {
+          statusMassage.remove();
+        }, 2000);
+
+      } else {
+        statusMassage.textContent = message.failure;
+      }
+    });
+  });
+}
+
 });
