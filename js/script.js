@@ -250,6 +250,79 @@ getRequest('http://localhost:3000/menu')
   });
 });
 
+const prevSlide = document.querySelector('.offer__slider-prev');
+const nextSlide = document.querySelector('.offer__slider-next');
+const currentSlide = document.querySelector('#current');
+const allSlide = document.querySelector('#all');
+let i = 1;
+
+function prevOrNextSlide() {
+
+nextSlide.addEventListener('click', (e) => {
+  //користувач натиснув next + 1
+  //prev -1
+  if (i === 4) {
+    i = 0;
+  }
+
+  hideSliderCards('.offer__slide');
+  showSliderCards(i);
+  i++;
+  console.log(i, 'next');
+  console.log(typeof(i), 'next');
+});
+
+
+prevSlide.addEventListener('click', (e) => {
+  //користувач натиснув next + 1
+  //prev -1
+  
+  if (i === 1) {
+    i = 4;
+  } else {
+    i--;
+  }
+
+  hideSliderCards('.offer__slide');
+  showSliderCards(i-1);
+
+  console.log(i, 'prev');
+  console.log(typeof(i), 'prev');
+});
+
+}
+
+prevOrNextSlide();
+
+function hideSliderCards(selector) {
+  const sliderCards = document.querySelectorAll(selector);
+  sliderCards.forEach(card => {
+  card.classList.add('hide');
+});
+}
+
+function showSliderCards(number=0) {
+  //const showSliderCard = document.querySelector(selector);
+  //showSliderCard.classList.add('show');
+  //showSliderCard.classList.remove('hide');
+  getRequest('http://localhost:3000/slider')
+  .then(data => {
+    allSlide.textContent = `0${data.length}`;
+    currentSlide.textContent = `0${number+1}`;
+    const element = document.querySelector('.offer__slider-wrapper');
+    element.insertAdjacentHTML('afterbegin', `
+    <div class="offer__slide">
+    <img src=${data[number].img} alt=${data[number].altimg}>
+    </div>
+    
+    `);
+  });
+}
+
+showSliderCards();
+//hideSliderCards('.offer__slide');
+
+
 //інший спосіб вивести обєкти на сторінці
 /*
 getRequest('http://localhost:3000/menu')

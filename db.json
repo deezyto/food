@@ -38,5 +38,23 @@
       "phone": "1",
       "id": 3
     }
+  ],
+  "slider": [
+    {
+      "img": "img/slider/pepper.jpg",
+      "altimg": "pepper"
+    },
+    {
+      "img": "img/slider/food-12.jpg",
+      "altimg": "food"
+    },
+    {
+      "img": "img/slider/olive-oil.jpg",
+      "altimg": "oil"
+    },
+    {
+      "img": "img/slider/paprika.jpg",
+      "altimg": "paprika"
+    }
   ]
 }
