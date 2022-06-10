@@ -231,34 +231,50 @@ class MenuCards {
 
 }
 
-new MenuCards(
-  "img/tabs/vegy.jpg",
-  'vegy',
-  'Меню "Фитнес"',
-  'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-  35,
-  '.menu__field .container'
-).render();
+const getRequest = async (url) => {
+  const result = await fetch(url);
 
-new MenuCards(
-  "img/tabs/elite.jpg",
-  'elite',
-  'Меню "Премиум"', 
-  'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-  27,
-  '.menu__field .container',
-  'menu__item'
-).render();
+  if (!result.ok) {
+    throw new Error(`Could not fetch ${url}, status: ${result.status}`);
+  }
 
-new MenuCards(
-  "img/tabs/post.jpg", 
-  "post", 
-  'Меню "Постное"',
-  'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-  23,
-  '.menu__field .container',
-  'menu__item'
-).render();
+  return await result.json();
+};
+
+
+getRequest('http://localhost:3000/menu')
+.then(data => {
+  //деструктуризуєм обєкти
+  data.forEach(({img, altimg, title, descr, price}) => {
+    new MenuCards(img, altimg, title, descr, price, '.menu .container').render();
+  });
+});
+
+//інший спосіб вивести обєкти на сторінці
+/*
+getRequest('http://localhost:3000/menu')
+.then(data => createCard(data));
+
+function createCard(data) {
+  data.forEach(({img, altimg, title, descr, price}) => {
+    const element = document.createElement('div');
+    element.classList.add('menu__item');
+
+    element.innerHTML = `
+    <img src=${img} alt=${altimg}>
+    <h3 class="menu__item-subtitle">${title}</h3>
+    <div class="menu__item-descr">${descr}</div>
+    <div class="menu__item-divider"></div>
+    <div class="menu__item-price">
+    <div class="menu__item-cost">Цена:</div>
+    <div class="menu__item-total"><span>${price}</span> грн/день</div>
+    </div>
+    `;
+
+    document.querySelector('.menu .container').append(element);
+  });
+}
+*/
 
 //створюєм функцію відправки даних на сервер
 //за допомогою JSON
@@ -274,10 +290,26 @@ const message = {
 //перебираєм всі форми на сайті
 //щоб приймати дані зі всіх форм
 forms.forEach(item => {
-  postData(item);
+  bindPostData(item);
 });
 
-function postData(form) {
+const postData = async (url, data) => {
+  //ставимо await до початка метода fetch()
+  //оскільки потрібно дочекатись отримання promise
+  const result = await fetch(url, {
+    method: "POST",
+    headers: {
+      'Content-type': 'application/json'
+    },
+    body: data
+    });
+  
+  //ставимо await щоб вернути promise
+  //коли він буде готовий
+  return await result.json();
+};
+
+function bindPostData(form) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
@@ -299,20 +331,23 @@ function postData(form) {
     const formData = new FormData(form);
     
     //робимо з формата formData формат обєкта
+    /*
     const object = {};
 
     formData.forEach((value, key) => {
       object[key] = value;
     });
-    
-    fetch('server.php', {
-      method: "POST",
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify(object)
-    })
-    .then(data => data.text())
+    */
+    //інший метод зробити з формата formData формат обєкта
+
+    //перетворюєм методом entries() formData в масив масивів
+    //перетворюєм масив масивів в звичайний обєкт
+    //перетворюєм обєкт в формат json
+    const json = JSON.stringify(Object.fromEntries(formData.entries()));
+
+    postData('http://localhost:3000/requests', json)
+    //трансоформація даних вже не потрібна
+    //.then(data => data.text())
     .then(data => {
       console.log(data);
       showThanksModal(message.success);
@@ -361,4 +396,5 @@ fetch('http://localhost:3000/menu')
 .then(data => data.json())
 .then(res => console.log(res));
 
+//
 });
