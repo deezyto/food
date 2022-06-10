@@ -274,6 +274,15 @@ function createCard(data) {
     document.querySelector('.menu .container').append(element);
   });
 }
+
+//виводим обєкти на сторінці за допомогою axios
+axios.get('http://localhost:3000/menu')
+.then(data => {
+  data.data.forEach(({img, altimg, title, descr, price}) => {
+    new MenuCards(img, altimg, title, descr, price, '.menu .container').render();
+  });
+});
+
 */
 
 //створюєм функцію відправки даних на сервер
