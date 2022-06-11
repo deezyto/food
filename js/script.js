@@ -250,6 +250,8 @@ getRequest('http://localhost:3000/menu')
   });
 });
 
+const wrapper = document.querySelector('.offer__slider-wrapper');
+const slide = wrapper.querySelector('.offer__slide');
 const prevSlide = document.querySelector('.offer__slider-prev');
 const nextSlide = document.querySelector('.offer__slider-next');
 const currentSlide = document.querySelector('#current');
@@ -265,7 +267,7 @@ nextSlide.addEventListener('click', (e) => {
     i = 0;
   }
 
-  hideSliderCards('.offer__slide');
+  hideSliderCards();
   showSliderCards(i);
   i++;
   console.log(i, 'next');
@@ -283,7 +285,7 @@ prevSlide.addEventListener('click', (e) => {
     i--;
   }
 
-  hideSliderCards('.offer__slide');
+  hideSliderCards();
   showSliderCards(i-1);
 
   console.log(i, 'prev');
@@ -295,33 +297,30 @@ prevSlide.addEventListener('click', (e) => {
 prevOrNextSlide();
 
 function hideSliderCards(selector) {
+  //зробим щоб не добавляло hide до попереднього
+  //слайда, а просто очищало вміст .offer__slider-wrapper
+  /*
   const sliderCards = document.querySelectorAll(selector);
-  sliderCards.forEach(card => {
-  card.classList.add('hide');
-});
+    sliderCards.forEach(card => {
+    card.classList.add('hide');
+    sliderCards.innerHTML = '';
+  });
+  */
+  slide.innerHTML = '';
 }
 
 function showSliderCards(number=0) {
-  //const showSliderCard = document.querySelector(selector);
-  //showSliderCard.classList.add('show');
-  //showSliderCard.classList.remove('hide');
   getRequest('http://localhost:3000/slider')
   .then(data => {
     allSlide.textContent = `0${data.length}`;
     currentSlide.textContent = `0${number+1}`;
-    const element = document.querySelector('.offer__slider-wrapper');
-    element.insertAdjacentHTML('afterbegin', `
-    <div class="offer__slide">
-    <img src=${data[number].img} alt=${data[number].altimg}>
-    </div>
-    
+    slide.insertAdjacentHTML('afterbegin', `
+    <img class="fade" src=${data[number].img} alt=${data[number].altimg}>
     `);
   });
 }
 
 showSliderCards();
-//hideSliderCards('.offer__slide');
-
 
 //інший спосіб вивести обєкти на сторінці
 /*
