@@ -250,6 +250,7 @@ getRequest('http://localhost:3000/menu')
   });
 });
 
+//створюєм слайдер
 const wrapper = document.querySelector('.offer__slider-wrapper');
 const slide = wrapper.querySelector('.offer__slide');
 const prevSlide = document.querySelector('.offer__slider-prev');
@@ -262,7 +263,7 @@ function prevOrNextSlide() {
 
 nextSlide.addEventListener('click', (e) => {
   //користувач натиснув next + 1
-  //prev -1
+
   if (i === 4) {
     i = 0;
   }
@@ -276,8 +277,7 @@ nextSlide.addEventListener('click', (e) => {
 
 
 prevSlide.addEventListener('click', (e) => {
-  //користувач натиснув next + 1
-  //prev -1
+  //користувач натиснув prev -1
   
   if (i === 1) {
     i = 4;
