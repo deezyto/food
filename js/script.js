@@ -1,7 +1,7 @@
 'use strict';
 
 //standart or carrousel
-const SLIDER_TYPE = 'standart';
+const SLIDER_TYPE = 'carrousel';
 window.addEventListener('DOMContentLoaded', () => {
 //потрібно зробити щоб при кліку на меню міналась картинка
 //текст і посилання меню було активне
@@ -253,14 +253,17 @@ getRequest('http://localhost:3000/menu')
 });
 
 //створюєм слайдер, моя версія
+const offerSlide = document.querySelector('.offer__slider');
 const wrapper = document.querySelector('.offer__slider-wrapper');
 const slide = wrapper.querySelector('.offer__slide');
+const slides = document.querySelectorAll('.offer__slide');
 const prevSlide = document.querySelector('.offer__slider-prev');
 const nextSlide = document.querySelector('.offer__slider-next');
 const currentSlide = document.querySelector('#current');
 const allSlide = document.querySelector('#all');
 const slidesField = document.querySelector('.offer__slider-inner');
 const width = window.getComputedStyle(wrapper).width;
+const carousel = document.querySelector('.carousel-indicators');
 
 let i = 1;
 let offset = 0;
@@ -339,7 +342,58 @@ function slider() {
   </div>
   <div class="offer__slide">
   <img class="fade" src="img/slider/paprika.jpg" alt="paprika">
-  </div>`;
+  </div>
+  `;
+
+  //щоб точки були правильно розміщені добавим позицію relative
+  offerSlide.style.position = 'relative';
+  //створим новий єлемент в середині якого будуть розміщуватись точки
+  const element = document.createElement('div');
+  element.classList.add('carousel-indicators');
+  offerSlide.append(element);
+
+  //поміщуєм на сторінку стільки точок скільки є картинок
+  for (let i = +allSlide.textContent; i > 0; i--) {
+    document.querySelector('.carousel-indicators').insertAdjacentHTML('afterbegin', `
+    <div class="dot"></div>`);
+  }
+
+  //робимо обробник подій
+  const dot = document.querySelectorAll('.dot');
+
+  //видаляємо клас active
+  function removeActiveDot() {
+    dot.forEach(item => {
+      item.classList.remove('active');
+    });
+  }
+
+  //добавляємо клас active
+  //приймаючи індекс єлемента 
+  function addActiveDot(i=0) {
+    dot[i].classList.add('active');
+  }
+
+  addActiveDot();
+
+  //назначаєм обробник подій всім точкам
+  dot.forEach((item, index) => {
+    item.addEventListener('click', () => {
+      //кожен слайд має ширину 650px
+      //якщо помножити ширину на індекс
+      //точки отримаєм відповідний width
+      //потрібного слайда
+      //перед тим методом slice видаляєм px
+      slidesField.style.transform = `translateX(-${slide.style.width.slice(0, width.length - 2) * index}px)`;
+      removeActiveDot();
+      addActiveDot(index);
+      if (+allSlide.textContent < 10) {
+        currentSlide.textContent = `0${index+1}`;
+      } else {
+        currentSlide.textContent = index+1;
+      }
+    });
+  });
 
   if (+allSlide.textContent < 10) {
     allSlide.textContent = `0${+allSlide.textContent}`;
@@ -355,7 +409,7 @@ function slider() {
 
   wrapper.style.overflow = 'hidden';
 
-  document.querySelectorAll('.offer__slide').forEach(slide => {
+  slides.forEach(slide => {
     slide.style.width = width;
   });
 
@@ -380,6 +434,12 @@ function slider() {
       currentSlide.textContent = i;
     }
 
+    //передаєм в функцію індекс
+    //єлемента щоб добавити класс
+    //active відповідній точці
+    removeActiveDot();
+    addActiveDot(i-1);
+
   });
 
   prevSlide.addEventListener('click', () => {
@@ -402,7 +462,8 @@ function slider() {
     } else {
       currentSlide.textContent = i;
     }
-
+    removeActiveDot();
+    addActiveDot(i-1);
   });
 
 }
