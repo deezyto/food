@@ -1,5 +1,7 @@
 'use strict';
 
+//standart or carrousel
+const SLIDER_TYPE = 'standart';
 window.addEventListener('DOMContentLoaded', () => {
 //потрібно зробити щоб при кліку на меню міналась картинка
 //текст і посилання меню було активне
@@ -257,8 +259,13 @@ const prevSlide = document.querySelector('.offer__slider-prev');
 const nextSlide = document.querySelector('.offer__slider-next');
 const currentSlide = document.querySelector('#current');
 const allSlide = document.querySelector('#all');
-let i = 1;
+const slidesField = document.querySelector('.offer__slider-inner');
+const width = window.getComputedStyle(wrapper).width;
 
+let i = 1;
+let offset = 0;
+
+//стандартний слайдер
 function prevOrNextSlide() {
 
 nextSlide.addEventListener('click', (e) => {
@@ -280,7 +287,6 @@ nextSlide.addEventListener('click', (e) => {
 
 prevSlide.addEventListener('click', (e) => {
   //користувач натиснув prev -1
-  
   if (i === 1) {
     i = +allSlide.textContent;
   } else {
@@ -295,8 +301,6 @@ prevSlide.addEventListener('click', (e) => {
 });
 
 }
-
-prevOrNextSlide();
 
 function hideSliderCards() {
   slide.innerHTML = '';
@@ -318,7 +322,97 @@ function showSliderCards(number=1) {
   });
 }
 
-showSliderCards();
+//слайдер по типу каруселі
+
+function slider() {
+  currentSlide.textContent = '01';
+  allSlide.textContent = '04';
+  slidesField.innerHTML = `
+  <div class="offer__slide">
+  <img class="fade" src="img/slider/pepper.jpg" alt="pepper">
+  </div>
+  <div class="offer__slide">
+  <img class="fade" src="img/slider/food-12.jpg" alt="food">
+  </div>
+  <div class="offer__slide">
+  <img class="fade" src="img/slider/olive-oil.jpg" alt="oil">
+  </div>
+  <div class="offer__slide">
+  <img class="fade" src="img/slider/paprika.jpg" alt="paprika">
+  </div>`;
+
+  if (+allSlide.textContent < 10) {
+    allSlide.textContent = `0${+allSlide.textContent}`;
+    currentSlide.textContent = `0${i}`;
+  } else {
+    allSlide.textContent = +allSlide.textContent;
+    currentSlide.textContent = i;
+  }
+
+  slidesField.style.width = 100 * +allSlide.textContent + '%';
+  slidesField.style.display = 'flex';
+  slidesField.style.transition = '0.5s all';
+
+  wrapper.style.overflow = 'hidden';
+
+  document.querySelectorAll('.offer__slide').forEach(slide => {
+    slide.style.width = width;
+  });
+
+  nextSlide.addEventListener('click', () => {
+    if (offset === +width.slice(0, width.length - 2) * (+allSlide.textContent -1)) {
+      offset = 0;
+    } else {
+      offset += +width.slice(0, width.length - 2);
+    }
+
+    slidesField.style.transform = `translateX(-${offset}px)`;
+
+    if (i === +allSlide.textContent) {
+      i = 1;
+    } else {
+      i++;
+    }
+
+    if (+allSlide.textContent < 10) {
+      currentSlide.textContent = `0${i}`;
+    } else {
+      currentSlide.textContent = i;
+    }
+
+  });
+
+  prevSlide.addEventListener('click', () => {
+    if (offset === 0) {
+      offset = +width.slice(0, width.length - 2) * (+allSlide.textContent -1);
+    } else {
+      offset -= +width.slice(0, width.length - 2);
+    }
+
+    slidesField.style.transform = `translateX(-${offset}px)`;
+
+    if (i === 1) {
+      i = +allSlide.textContent;
+    } else {
+      i--;
+    }
+
+    if (+allSlide.textContent < 10) {
+      currentSlide.textContent = `0${i}`;
+    } else {
+      currentSlide.textContent = i;
+    }
+
+  });
+
+}
+
+if (SLIDER_TYPE === 'standart') {
+  prevOrNextSlide();
+  showSliderCards();
+} else {
+  slider();
+}
 
 //інший спосіб вивести обєкти на сторінці
 /*
