@@ -250,7 +250,7 @@ getRequest('http://localhost:3000/menu')
   });
 });
 
-//створюєм слайдер
+//створюєм слайдер, моя версія
 const wrapper = document.querySelector('.offer__slider-wrapper');
 const slide = wrapper.querySelector('.offer__slide');
 const prevSlide = document.querySelector('.offer__slider-prev');
@@ -264,13 +264,15 @@ function prevOrNextSlide() {
 nextSlide.addEventListener('click', (e) => {
   //користувач натиснув next + 1
 
-  if (i === 4) {
-    i = 0;
+  if (i === +allSlide.textContent) {
+    i = 1;
+  } else {
+    i++; 
   }
 
+  console.log(+allSlide.textContent);
   hideSliderCards();
   showSliderCards(i);
-  i++;
   console.log(i, 'next');
   console.log(typeof(i), 'next');
 });
@@ -280,13 +282,13 @@ prevSlide.addEventListener('click', (e) => {
   //користувач натиснув prev -1
   
   if (i === 1) {
-    i = 4;
+    i = +allSlide.textContent;
   } else {
     i--;
   }
-
+  
   hideSliderCards();
-  showSliderCards(i-1);
+  showSliderCards(i);
 
   console.log(i, 'prev');
   console.log(typeof(i), 'prev');
@@ -296,26 +298,22 @@ prevSlide.addEventListener('click', (e) => {
 
 prevOrNextSlide();
 
-function hideSliderCards(selector) {
-  //зробим щоб не добавляло hide до попереднього
-  //слайда, а просто очищало вміст .offer__slider-wrapper
-  /*
-  const sliderCards = document.querySelectorAll(selector);
-    sliderCards.forEach(card => {
-    card.classList.add('hide');
-    sliderCards.innerHTML = '';
-  });
-  */
+function hideSliderCards() {
   slide.innerHTML = '';
 }
 
-function showSliderCards(number=0) {
+function showSliderCards(number=1) {
   getRequest('http://localhost:3000/slider')
   .then(data => {
-    allSlide.textContent = `0${data.length}`;
-    currentSlide.textContent = `0${number+1}`;
+    if (+allSlide.textContent < 10) {
+      allSlide.textContent = `0${data.length}`;
+      currentSlide.textContent = `0${number}`;
+    } else {
+      allSlide.textContent = data.length;
+      currentSlide.textContent = number;
+    }
     slide.insertAdjacentHTML('afterbegin', `
-    <img class="fade" src=${data[number].img} alt=${data[number].altimg}>
+    <img class="fade" src=${data[number-1].img} alt=${data[number-1].altimg}>
     `);
   });
 }
