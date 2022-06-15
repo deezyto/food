@@ -327,6 +327,10 @@ function showSliderCards(number=1) {
 
 //слайдер по типу каруселі
 
+function deletePx(str) {
+  return +str.replace(/px/, '');
+}
+
 function slider() {
   currentSlide.textContent = '01';
   allSlide.textContent = '04';
@@ -384,7 +388,8 @@ function slider() {
       //точки отримаєм відповідний width
       //потрібного слайда
       //перед тим методом slice видаляєм px
-      slidesField.style.transform = `translateX(-${slide.style.width.slice(0, width.length - 2) * index}px)`;
+      //slidesField.style.transform = `translateX(-${slide.style.width.slice(0, width.length - 2) * index}px)`;
+      slidesField.style.transform = `translateX(-${deletePx(slide.style.width) * index}px)`;
       removeActiveDot();
       addActiveDot(index);
       if (+allSlide.textContent < 10) {
@@ -414,10 +419,10 @@ function slider() {
   });
 
   nextSlide.addEventListener('click', () => {
-    if (offset === +width.slice(0, width.length - 2) * (+allSlide.textContent -1)) {
+    if (offset === deletePx(width) * (+allSlide.textContent -1)) {
       offset = 0;
     } else {
-      offset += +width.slice(0, width.length - 2);
+      offset += deletePx(width);
     }
 
     slidesField.style.transform = `translateX(-${offset}px)`;
@@ -444,9 +449,9 @@ function slider() {
 
   prevSlide.addEventListener('click', () => {
     if (offset === 0) {
-      offset = +width.slice(0, width.length - 2) * (+allSlide.textContent -1);
+      offset = deletePx(width) * (+allSlide.textContent -1);
     } else {
-      offset -= +width.slice(0, width.length - 2);
+      offset -= deletePx(width);
     }
 
     slidesField.style.transform = `translateX(-${offset}px)`;
