@@ -1,17 +1,17 @@
-function slider() {
+function slider({container, curentSlide, nextArrow, prevArrow, allCounter, currentCounter, slidesWrapper, field}) {
 //створюєм слайдер, моя версія
 //standart or carrousel
 const SLIDER_TYPE = 'carrousel';
 
-const offerSlide = document.querySelector('.offer__slider');
-const wrapper = document.querySelector('.offer__slider-wrapper');
-const slide = wrapper.querySelector('.offer__slide');
+const offerSlide = document.querySelector(container); //container
+const wrapper = document.querySelector(slidesWrapper); //slidesWrapper
+const slide = wrapper.querySelector(curentSlide); //curentSlide
 const slides = document.querySelectorAll('.offer__slide');
-const prevSlide = document.querySelector('.offer__slider-prev');
-const nextSlide = document.querySelector('.offer__slider-next');
-const currentSlide = document.querySelector('#current');
-const allSlide = document.querySelector('#all');
-const slidesField = document.querySelector('.offer__slider-inner');
+const prevSlide = document.querySelector(prevArrow); //prevArrow
+const nextSlide = document.querySelector(nextArrow); //nextArrow
+const currentSlide = document.querySelector(currentCounter); //currentCounter
+const allSlide = document.querySelector(allCounter); //allCounter
+const slidesField = document.querySelector(field); //field
 const width = window.getComputedStyle(wrapper).width;
 const carousel = document.querySelector('.carousel-indicators');
 
@@ -231,4 +231,4 @@ if (SLIDER_TYPE === 'standart') {
 }
 }
 
-module.exports = slider;
+export default slider;

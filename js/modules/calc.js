@@ -1,6 +1,5 @@
 function calc() {
 //робимо калькулятор на сайті
-
 const calculatingResult = document.querySelector('.calculating__result span');
 
 let sex, height, weight, age, ratio;
@@ -107,5 +106,5 @@ getDynamicInfo('#height');
 getDynamicInfo('#weight');
 getDynamicInfo('#age');
 }
-
-module.exports = calc;
+//module.exports = calc;
+export default calc;

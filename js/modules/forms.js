@@ -1,4 +1,7 @@
-function forms() {
+import {openModal, closeModal} from './modal';
+import {postData} from '../services/services';
+
+function forms(formSelector, modalTimerId) {
 //інший спосіб вивести обєкти на сторінці
 /*
 getRequest('http://localhost:3000/menu')
@@ -36,7 +39,7 @@ axios.get('http://localhost:3000/menu')
 
 //створюєм функцію відправки даних на сервер
 //за допомогою JSON
-const forms = document.querySelectorAll('form');
+const forms = document.querySelectorAll(formSelector);
 console.log(forms, 'forms');
 
 const message = {
@@ -50,22 +53,6 @@ const message = {
 forms.forEach(item => {
   bindPostData(item);
 });
-
-const postData = async (url, data) => {
-  //ставимо await до початка метода fetch()
-  //оскільки потрібно дочекатись отримання promise
-  const result = await fetch(url, {
-    method: "POST",
-    headers: {
-      'Content-type': 'application/json'
-    },
-    body: data
-    });
-  
-  //ставимо await щоб вернути promise
-  //коли він буде готовий
-  return await result.json();
-};
 
 function bindPostData(form) {
   form.addEventListener('submit', (e) => {
@@ -128,7 +115,7 @@ function showThanksModal(message) {
   console.log(prevModalDialog);
   //закриваєм блок модального вікна
   prevModalDialog.classList.add('hide');
-  openModal();
+  openModal('.modal', modalTimerId);
   const thanksModal = document.createElement('div');
   thanksModal.classList.add('modal__dialog');
   thanksModal.innerHTML = `
@@ -144,7 +131,7 @@ function showThanksModal(message) {
     thanksModal.remove();
     prevModalDialog.classList.add('show');
     prevModalDialog.classList.remove('hide');
-    closeModal();
+    closeModal('.modal');
   }, 5000);
 
 }
@@ -156,4 +143,4 @@ fetch('http://localhost:3000/menu')
 
 }
 
-module.exports = forms;
+export default forms;

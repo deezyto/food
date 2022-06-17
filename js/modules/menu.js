@@ -1,3 +1,4 @@
+import {getRequest} from '../services/services';
 
 function menu() {
 //створюєм карточки в меню
@@ -43,17 +44,6 @@ class MenuCards {
   
   }
   
-  const getRequest = async (url) => {
-    const result = await fetch(url);
-  
-    if (!result.ok) {
-      throw new Error(`Could not fetch ${url}, status: ${result.status}`);
-    }
-  
-    return await result.json();
-  };
-  
-  
   getRequest('http://localhost:3000/menu')
   .then(data => {
     //деструктуризуєм обєкти
@@ -63,5 +53,4 @@ class MenuCards {
   });
 }
 
-
-module.exports = menu;
+export default menu;

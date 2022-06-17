@@ -1,15 +1,19 @@
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./js/modules/calc.js":
 /*!****************************!*\
   !*** ./js/modules/calc.js ***!
   \****************************/
-/***/ ((module) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
 function calc() {
 //робимо калькулятор на сайті
-
 const calculatingResult = document.querySelector('.calculating__result span');
 
 let sex, height, weight, age, ratio;
@@ -116,8 +120,8 @@ getDynamicInfo('#height');
 getDynamicInfo('#weight');
 getDynamicInfo('#age');
 }
-
-module.exports = calc;
+//module.exports = calc;
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (calc);
 
 /***/ }),
 
@@ -125,9 +129,18 @@ module.exports = calc;
 /*!*****************************!*\
   !*** ./js/modules/forms.js ***!
   \*****************************/
-/***/ ((module) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-function forms() {
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modal */ "./js/modules/modal.js");
+/* harmony import */ var _services_services__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../services/services */ "./js/services/services.js");
+
+
+
+function forms(formSelector, modalTimerId) {
 //інший спосіб вивести обєкти на сторінці
 /*
 getRequest('http://localhost:3000/menu')
@@ -165,7 +178,7 @@ axios.get('http://localhost:3000/menu')
 
 //створюєм функцію відправки даних на сервер
 //за допомогою JSON
-const forms = document.querySelectorAll('form');
+const forms = document.querySelectorAll(formSelector);
 console.log(forms, 'forms');
 
 const message = {
@@ -179,22 +192,6 @@ const message = {
 forms.forEach(item => {
   bindPostData(item);
 });
-
-const postData = async (url, data) => {
-  //ставимо await до початка метода fetch()
-  //оскільки потрібно дочекатись отримання promise
-  const result = await fetch(url, {
-    method: "POST",
-    headers: {
-      'Content-type': 'application/json'
-    },
-    body: data
-    });
-  
-  //ставимо await щоб вернути promise
-  //коли він буде готовий
-  return await result.json();
-};
 
 function bindPostData(form) {
   form.addEventListener('submit', (e) => {
@@ -232,7 +229,7 @@ function bindPostData(form) {
     //перетворюєм обєкт в формат json
     const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-    postData('http://localhost:3000/requests', json)
+    (0,_services_services__WEBPACK_IMPORTED_MODULE_1__.postData)('http://localhost:3000/requests', json)
     //трансоформація даних вже не потрібна
     //.then(data => data.text())
     .then(data => {
@@ -257,7 +254,7 @@ function showThanksModal(message) {
   console.log(prevModalDialog);
   //закриваєм блок модального вікна
   prevModalDialog.classList.add('hide');
-  openModal();
+  (0,_modal__WEBPACK_IMPORTED_MODULE_0__.openModal)('.modal', modalTimerId);
   const thanksModal = document.createElement('div');
   thanksModal.classList.add('modal__dialog');
   thanksModal.innerHTML = `
@@ -273,7 +270,7 @@ function showThanksModal(message) {
     thanksModal.remove();
     prevModalDialog.classList.add('show');
     prevModalDialog.classList.remove('hide');
-    closeModal();
+    (0,_modal__WEBPACK_IMPORTED_MODULE_0__.closeModal)('.modal');
   }, 5000);
 
 }
@@ -285,7 +282,7 @@ fetch('http://localhost:3000/menu')
 
 }
 
-module.exports = forms;
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (forms);
 
 /***/ }),
 
@@ -293,7 +290,13 @@ module.exports = forms;
 /*!****************************!*\
   !*** ./js/modules/menu.js ***!
   \****************************/
-/***/ ((module) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _services_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../services/services */ "./js/services/services.js");
 
 
 function menu() {
@@ -340,18 +343,7 @@ class MenuCards {
   
   }
   
-  const getRequest = async (url) => {
-    const result = await fetch(url);
-  
-    if (!result.ok) {
-      throw new Error(`Could not fetch ${url}, status: ${result.status}`);
-    }
-  
-    return await result.json();
-  };
-  
-  
-  getRequest('http://localhost:3000/menu')
+  (0,_services_services__WEBPACK_IMPORTED_MODULE_0__.getRequest)('http://localhost:3000/menu')
   .then(data => {
     //деструктуризуєм обєкти
     data.forEach(({img, altimg, title, descr, price}) => {
@@ -360,8 +352,7 @@ class MenuCards {
   });
 }
 
-
-module.exports = menu;
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (menu);
 
 /***/ }),
 
@@ -369,22 +360,16 @@ module.exports = menu;
 /*!*****************************!*\
   !*** ./js/modules/modal.js ***!
   \*****************************/
-/***/ ((module) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-function modal() {
-//показуєм модальне вікно при натисканні на кнопку
-
-const openModalWindow = document.querySelectorAll('[data-modal]');
-/* закоментуєм щоб зробити делегування подій
-const closeModalWindow = document.querySelector('[data-modal-close]');
-*/
-const modalWindow = document.querySelector('.modal');
-
-openModalWindow.forEach(item => {
-  item.addEventListener('click', openModal);
-});
-
-function openModal() {
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "closeModal": () => (/* binding */ closeModal),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   "openModal": () => (/* binding */ openModal)
+/* harmony export */ });
+function openModal(modalSelector, modalTimerId) {
+  const modalWindow = document.querySelector(modalSelector);
   console.log('click');
   modalWindow.classList.add('show');
   modalWindow.classList.remove('hide');
@@ -396,10 +381,15 @@ function openModal() {
   //якщо користувач сам відкрив модальне вікно
   //то видаляєм таймер, щоб вікно не показалось
   //йому автоматично
-  clearInterval(modalTimerId);
+  console.log(modalTimerId);
+  if (modalTimerId) {
+    clearInterval(modalTimerId);
+  }
+  
 }
 
-function closeModal() {
+function closeModal(modalSelector) {
+  const modalWindow = document.querySelector(modalSelector);
   console.log('click');
   modalWindow.classList.remove('show');
   modalWindow.classList.add('hide');
@@ -409,6 +399,20 @@ function closeModal() {
   //відновлюєм можливість скролити
   document.body.style.overflow = '';
 }
+
+function modal(triggerSelector, modalSelector, modalTimerId) {
+//показуєм модальне вікно при натисканні на кнопку
+
+const openModalWindow = document.querySelectorAll(triggerSelector);
+/* закоментуєм щоб зробити делегування подій
+const closeModalWindow = document.querySelector('[data-modal-close]');
+*/
+const modalWindow = document.querySelector(modalSelector);
+
+openModalWindow.forEach(item => {
+  //ставимо стрілочну функцію щоб openmodal спрацювала не зразу, а тільки після кліка
+  item.addEventListener('click', () => openModal(modalSelector, modalTimerId));
+});
 
 /* закоментуєм щоб зробити делегування подій
 closeModalWindow.addEventListener('click', closeModal);
@@ -421,7 +425,7 @@ modalWindow.addEventListener('click', (e) => {
   //щоб закривалось модальне вікно навіть якщо воно має інший клас
   //але той самий data атрибут
   if (e.target === modalWindow || e.target.getAttribute('data-modal-close') === '') {
-    closeModal();
+    closeModal(modalSelector);
   }
 });
 
@@ -429,19 +433,15 @@ modalWindow.addEventListener('click', (e) => {
 //кнопку ESC
 document.addEventListener('keydown', (e) => {
   if (e.code === 'Escape' && modalWindow.classList.contains('show')) {
-    closeModal();
+    closeModal(modalSelector);
   }
 });
-
-//зробити щоб показувалось модальне вікно
-//через деякий час
-const modalTimerId = setTimeout(openModal, 50000);
 
 //зробити щоб показувалось модальне вікно
 //після того як користувач дойшов до footer
 function showModalByScroll() {
   if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
-    openModal();
+    openModal(modalSelector, modalTimerId);
     window.removeEventListener('scroll', showModalByScroll);
   }
 }
@@ -449,7 +449,8 @@ function showModalByScroll() {
 window.addEventListener('scroll', showModalByScroll);
 }
 
-module.exports = modal;
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (modal);
+
 
 /***/ }),
 
@@ -457,22 +458,26 @@ module.exports = modal;
 /*!******************************!*\
   !*** ./js/modules/slider.js ***!
   \******************************/
-/***/ ((module) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-function slider() {
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function slider({container, curentSlide, nextArrow, prevArrow, allCounter, currentCounter, slidesWrapper, field}) {
 //створюєм слайдер, моя версія
 //standart or carrousel
 const SLIDER_TYPE = 'carrousel';
 
-const offerSlide = document.querySelector('.offer__slider');
-const wrapper = document.querySelector('.offer__slider-wrapper');
-const slide = wrapper.querySelector('.offer__slide');
+const offerSlide = document.querySelector(container); //container
+const wrapper = document.querySelector(slidesWrapper); //slidesWrapper
+const slide = wrapper.querySelector(curentSlide); //curentSlide
 const slides = document.querySelectorAll('.offer__slide');
-const prevSlide = document.querySelector('.offer__slider-prev');
-const nextSlide = document.querySelector('.offer__slider-next');
-const currentSlide = document.querySelector('#current');
-const allSlide = document.querySelector('#all');
-const slidesField = document.querySelector('.offer__slider-inner');
+const prevSlide = document.querySelector(prevArrow); //prevArrow
+const nextSlide = document.querySelector(nextArrow); //nextArrow
+const currentSlide = document.querySelector(currentCounter); //currentCounter
+const allSlide = document.querySelector(allCounter); //allCounter
+const slidesField = document.querySelector(field); //field
 const width = window.getComputedStyle(wrapper).width;
 const carousel = document.querySelector('.carousel-indicators');
 
@@ -692,7 +697,7 @@ if (SLIDER_TYPE === 'standart') {
 }
 }
 
-module.exports = slider;
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (slider);
 
 /***/ }),
 
@@ -700,16 +705,20 @@ module.exports = slider;
 /*!****************************!*\
   !*** ./js/modules/tabs.js ***!
   \****************************/
-/***/ ((module) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-function tabs() {
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function tabs(tabsSelector, tabsContentSelector, tabsParentSelector, activeClass) {
 //потрібно зробити щоб при кліку на меню міналась картинка
 //текст і посилання меню було активне
 
 //вкладки на які будем натискати
-const tabs = document.querySelectorAll('.tabheader__item'),
-      tabsContent = document.querySelectorAll('.tabcontent'),
-      tabsParent = document.querySelector('.tabheader__items');
+const tabs = document.querySelectorAll(tabsSelector),
+      tabsContent = document.querySelectorAll(tabsContentSelector),
+      tabsParent = document.querySelector(tabsParentSelector);
 
 function hideTabContent() {
   tabsContent.forEach(item => {
@@ -719,7 +728,7 @@ function hideTabContent() {
   });
 
   tabs.forEach(item => {
-    item.classList.remove('tabheader__item_active');
+    item.classList.remove(activeClass);
   });
 }
 
@@ -727,7 +736,7 @@ function showTabContent(i = 0) {
   //tabsContent[i].style.display = 'block';
   tabsContent[i].classList.add('show', 'fade');
   tabsContent[i].classList.remove('hide');
-  tabs[i].classList.add('tabheader__item_active');
+  tabs[i].classList.add(activeClass);
 
 }
 
@@ -736,7 +745,7 @@ showTabContent();
 
 tabsParent.addEventListener('click', (e) => {
   const target = e.target;
-  if (target && target.classList.contains('tabheader__item')) {
+  if (target && target.classList.contains(tabsSelector.slice(1))) {
     tabs.forEach((item, i) => {
       if (target === item) {
         hideTabContent();
@@ -747,7 +756,7 @@ tabsParent.addEventListener('click', (e) => {
 });
 }
 
-module.exports = tabs;
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (tabs);
 
 /***/ }),
 
@@ -755,79 +764,123 @@ module.exports = tabs;
 /*!*****************************!*\
   !*** ./js/modules/timer.js ***!
   \*****************************/
-/***/ ((module) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-function timer() {
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function timer(id, endtime) {
   //потрібно створити таймер на сайті
-const endtime = '2022-06-10';
 
-function getTimeRemaining(endtime) {
-  //зробимо щоб показувались нулі, якщо дата минула
-  let days, hours, minutes, seconds;
+  function getTimeRemaining(endtime) {
+    //зробимо щоб показувались нулі, якщо дата минула
+    let days, hours, minutes, seconds;
 
-  const t = Date.parse(endtime) - Date.parse(new Date());
+    const t = Date.parse(endtime) - Date.parse(new Date());
 
-  if (t <= 0) {
-    days = 0;
-    hours = 0;
-    minutes = 0;
-    seconds = 0;
-  } else {
-    days = Math.floor(t / (1000 * 60 * 60 * 24));
-    hours = Math.floor((t / (1000 * 60 * 60) % 24));
-    minutes = Math.floor((t / 1000 / 60) % 60);
-    seconds = Math.floor((t / 1000) % 60);
-  }
-  
-  return {
-    all: t,
-    days: days,
-    hours: hours,
-    minutes: minutes,
-    seconds: seconds
-  };
-
-}
-
-function getZero(num) {
-  if (num >= 0 && num < 10) {
-    return `0${num}`;
-  } else {
-    return num;
-  }
-}
-
-function setClock(selector, endtime) {
-  const timer = document.querySelector(selector);
-  const days = timer.querySelector('#days');
-  const hours = timer.querySelector('#hours');
-  const minutes = timer.querySelector('#minutes');
-  const seconds = timer.querySelector('#seconds');
-  const timeInterval = setInterval(updateClock, 1000);
-
-  //викликаєм спочатку щоб не було мигання попередньої дати
-  updateClock();
-
-  function updateClock() {
-
-    const t = getTimeRemaining(endtime);
-    days.innerHTML = getZero(t.days);
-    hours.innerHTML = getZero(t.hours);
-    minutes.innerHTML = getZero(t.minutes);
-    seconds.innerHTML = getZero(t.seconds);
-    
-    if (t.all <= 0) {
-      clearInterval(timeInterval);
+    if (t <= 0) {
+      days = 0;
+      hours = 0;
+      minutes = 0;
+      seconds = 0;
+    } else {
+      days = Math.floor(t / (1000 * 60 * 60 * 24));
+      hours = Math.floor((t / (1000 * 60 * 60) % 24));
+      minutes = Math.floor((t / 1000 / 60) % 60);
+      seconds = Math.floor((t / 1000) % 60);
     }
 
+    return {
+      all: t,
+      days: days,
+      hours: hours,
+      minutes: minutes,
+      seconds: seconds
+    };
+
+    }
+
+    function getZero(num) {
+    if (num >= 0 && num < 10) {
+      return `0${num}`;
+    } else {
+      return num;
+    }
+    }
+
+    function setClock(selector, endtime) {
+    const timer = document.querySelector(selector);
+    const days = timer.querySelector('#days');
+    const hours = timer.querySelector('#hours');
+    const minutes = timer.querySelector('#minutes');
+    const seconds = timer.querySelector('#seconds');
+    const timeInterval = setInterval(updateClock, 1000);
+
+    //викликаєм спочатку щоб не було мигання попередньої дати
+    updateClock();
+
+    function updateClock() {
+
+      const t = getTimeRemaining(endtime);
+      days.innerHTML = getZero(t.days);
+      hours.innerHTML = getZero(t.hours);
+      minutes.innerHTML = getZero(t.minutes);
+      seconds.innerHTML = getZero(t.seconds);
+      
+      if (t.all <= 0) {
+        clearInterval(timeInterval);
+      }
+
+    }
+
+    }
+
+    setClock(id, endtime);
+    }
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (timer);
+
+/***/ }),
+
+/***/ "./js/services/services.js":
+/*!*********************************!*\
+  !*** ./js/services/services.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "getRequest": () => (/* binding */ getRequest),
+/* harmony export */   "postData": () => (/* binding */ postData)
+/* harmony export */ });
+const postData = async (url, data) => {
+//ставимо await до початка метода fetch()
+//оскільки потрібно дочекатись отримання promise
+  const result = await fetch(url, {
+    method: "POST",
+    headers: {
+    'Content-type': 'application/json'
+    },
+    body: data
+    });
+
+//ставимо await щоб вернути promise
+//коли він буде готовий
+  return await result.json();
+};
+
+const getRequest = async (url) => {
+  const result = await fetch(url);
+
+  if (!result.ok) {
+    throw new Error(`Could not fetch ${url}, status: ${result.status}`);
   }
 
-}
+  return await result.json();
+};
 
-setClock('.timer', endtime);
-}
 
-module.exports = timer;
 
 /***/ })
 
@@ -858,29 +911,79 @@ module.exports = timer;
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 /*!**********************!*\
   !*** ./js/script.js ***!
   \**********************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _modules_tabs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/tabs */ "./js/modules/tabs.js");
+/* harmony import */ var _modules_menu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/menu */ "./js/modules/menu.js");
+/* harmony import */ var _modules_timer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/timer */ "./js/modules/timer.js");
+/* harmony import */ var _modules_modal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/modal */ "./js/modules/modal.js");
+/* harmony import */ var _modules_forms__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/forms */ "./js/modules/forms.js");
+/* harmony import */ var _modules_slider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/slider */ "./js/modules/slider.js");
+/* harmony import */ var _modules_calc__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/calc */ "./js/modules/calc.js");
+
+
+
+
+
+
+
+
 
 window.addEventListener('DOMContentLoaded', () => {
-  const tabs = __webpack_require__(/*! ./modules/tabs */ "./js/modules/tabs.js");
-  const menu = __webpack_require__(/*! ./modules/menu */ "./js/modules/menu.js");
-  const timer = __webpack_require__(/*! ./modules/timer */ "./js/modules/timer.js");
-  const modal = __webpack_require__(/*! ./modules/modal */ "./js/modules/modal.js");
-  const forms = __webpack_require__(/*! ./modules/forms */ "./js/modules/forms.js");
-  const slider = __webpack_require__(/*! ./modules/slider */ "./js/modules/slider.js");
-  const calc = __webpack_require__(/*! ./modules/calc */ "./js/modules/calc.js");
+  //зробити щоб показувалось модальне вікно
+  //через деякий час
+  const modalTimerId = setTimeout(() => (0,_modules_modal__WEBPACK_IMPORTED_MODULE_3__.openModal)('.modal', modalTimerId), 50000);
 
-  tabs();
-  menu();
-  timer();
-  modal();
-  forms();
-  slider();
-  calc();
+  (0,_modules_tabs__WEBPACK_IMPORTED_MODULE_0__["default"])('.tabheader__item', '.tabcontent', '.tabheader__items', 'tabheader__item_active');
+  (0,_modules_menu__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  (0,_modules_timer__WEBPACK_IMPORTED_MODULE_2__["default"])('.timer', '2022-07-10');
+  (0,_modules_modal__WEBPACK_IMPORTED_MODULE_3__["default"])('[data-modal]', '.modal', modalTimerId);
+  (0,_modules_forms__WEBPACK_IMPORTED_MODULE_4__["default"])('form', modalTimerId);
+  (0,_modules_slider__WEBPACK_IMPORTED_MODULE_5__["default"])({
+    container : '.offer__slider',
+    curentSlide: '.offer__slide',
+    nextArrow: '.offer__slider-next',
+    prevArrow: '.offer__slider-prev',
+    allCounter: '#all',
+    currentCounter: '#current',
+    slidesWrapper: '.offer__slider-wrapper',
+    field: '.offer__slider-inner'
+  });
+  (0,_modules_calc__WEBPACK_IMPORTED_MODULE_6__["default"])();
 });
 
 })();
