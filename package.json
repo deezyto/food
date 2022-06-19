@@ -12,22 +12,9 @@
   },
   "author": "",
   "license": "ISC",
-  "browserslist": [{
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": {
-            "edge": "17",
-            "firefox": "60",
-            "chrome": "67",
-            "safari": "11.1"
-          },
-          "useBuiltIns": "usage"
-        }
-      ]
-    ]
-  }],
+  "browserslist": [
+    "> 1%"
+  ],
   "bugs": {
     "url": "https://github.com/deezyto/food/issues"
   },
@@ -36,11 +23,16 @@
     "@babel/cli": "^7.17.10",
     "@babel/core": "^7.18.5",
     "@babel/preset-env": "^7.18.2",
+    "core-js": "^3.23.1",
     "json-server": "^0.17.0",
     "webpack": "^5.73.0",
     "webpack-cli": "^4.10.0"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.12.1"
+    "@babel/polyfill": "^7.12.1",
+    "babel-loader": "^8.2.5",
+    "es6-promise": "^4.2.8",
+    "es6-promise-polyfill": "^1.2.0",
+    "nodelist-foreach-polyfill": "^1.2.0"
   }
 }
